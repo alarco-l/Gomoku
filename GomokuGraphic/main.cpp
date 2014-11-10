@@ -1,20 +1,12 @@
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 
-int main()
+#include "Graphic.h"
+
+int						main()
 {
-	sf::RenderWindow window(sf::VideoMode(1024, 768), "SFML works!");
-
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.display();
-	}
+	sf::RenderWindow	window(sf::VideoMode(1024, 768), "Gomoku");
+	Graphic				*graphic = new Graphic(window);
+	
+	graphic->run();
 	return 0;
 }
