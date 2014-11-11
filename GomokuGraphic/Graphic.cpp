@@ -32,26 +32,14 @@ void					Graphic::run()
 		{
 			if (event.type == sf::Event::Closed)
 				_window.close();
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 			{
 				p.posX = sf::Mouse::getPosition(_window).x;
 				p.posY = sf::Mouse::getPosition(_window).y;
-				if (player)
-				{
-					p.sprite = *_sprite["blanc"];
-					p.sprite.setPosition(p.posX, p.posY);
-					_player1.push_back(p);
-				}
-				else
-				{
-					p.sprite = *_sprite["noir"];
-					p.sprite.setPosition(p.posX, p.posY);
-					_player2.push_back(p);
-				}
+				putPion(p, player);
 				player = !player;
 			}
 		}
-
 		_window.clear();
 		draw();
 		_window.display();
@@ -86,4 +74,20 @@ void					Graphic::loadTexture()
 	if (!_texture["noir"]->loadFromFile("../Ressource/noir.png"))
 		throw std::runtime_error("Failed load texture");
 	_sprite["noir"]->setTexture(*_texture["noir"]);
+}
+
+void					Graphic::putPion(Player &p, bool player)
+{
+	if (player)
+	{
+		p.sprite = *_sprite["blanc"];
+		p.sprite.setPosition(p.posX - p.sprite.getLocalBounds().height / 2, p.posY - p.sprite.getLocalBounds().width / 2);
+		_player1.push_back(p);
+	}
+	else
+	{
+		p.sprite = *_sprite["noir"];
+		p.sprite.setPosition(p.posX - p.sprite.getLocalBounds().height / 2, p.posY - p.sprite.getLocalBounds().width / 2);
+		_player2.push_back(p);
+	}
 }

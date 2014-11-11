@@ -15,10 +15,6 @@ public:
 	void									run();
 
 private:
-	void									draw();
-	void									loadTexture();
-
-private:
 
 	struct									Player
 	{
@@ -26,6 +22,13 @@ private:
 		int									posX;
 		int									posY;
 	};
+
+private:
+	void									draw();
+	void									loadTexture();
+	void									putPion(Player &, bool);
+
+private:
 
 	sf::RenderWindow						&_window;
 	std::map<std::string, sf::Sprite*>		_sprite;
