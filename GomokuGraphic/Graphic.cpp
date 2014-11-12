@@ -12,17 +12,22 @@ Graphic::Graphic(sf::RenderWindow &window) : _window(window)
 	_sprite["blanc"] = new sf::Sprite;
 	_texture["noir"] = new sf::Texture;
 	_sprite["noir"] = new sf::Sprite;
+	_texture["jvsj"] = new sf::Texture;
+	_sprite["jvsj"] = new sf::Sprite;
+	_texture["jvsia"] = new sf::Texture;
+	_sprite["jvsia"] = new sf::Sprite;
 }
 
 Graphic::~Graphic()
 {
 
 }
-
+#include <iostream>
 void					Graphic::run()
 {
 	bool				player = true;
 	Player				p;
+	bool				menu = true;
 
 	loadTexture();
 	while (_window.isOpen())
@@ -34,14 +39,29 @@ void					Graphic::run()
 				_window.close();
 			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 			{
-				p.posX = sf::Mouse::getPosition(_window).x;
-				p.posY = sf::Mouse::getPosition(_window).y;
-				putPion(p, player);
-				player = !player;
+				if (!menu)
+				{
+					p.posX = sf::Mouse::getPosition(_window).x;
+					p.posY = sf::Mouse::getPosition(_window).y;
+					std::cout << p.posX << " " << p.posY << std::endl;
+					if ((p.posX >= 70 && p.posY >= 90) || (p.posX >= 960 && p.posY >= 90))
+					{
+						putPion(p, player);
+						player = !player;
+					};
+				}
+				else
+				{
+					
+				}
 			}
 		}
+		std::cout << p.posX << " " << p.posY << std::endl;
 		_window.clear();
-		draw();
+		if (!menu)
+			draw();
+		else
+			drawMenu();
 		_window.display();
 	}
 }
@@ -74,6 +94,10 @@ void					Graphic::loadTexture()
 	if (!_texture["noir"]->loadFromFile("../Ressource/noir.png"))
 		throw std::runtime_error("Failed load texture");
 	_sprite["noir"]->setTexture(*_texture["noir"]);
+	if (!_texture["jvsj"]->loadFromFile("../Ressource/jvsj.png"))
+		throw std::runtime_error("Failed load texture");
+	_sprite["jvsj"]->setTexture(*_texture["jvsj"]);
+	_sprite["jvsj"]->setPosition(350, 180);
 }
 
 void					Graphic::putPion(Player &p, bool player)
@@ -90,4 +114,11 @@ void					Graphic::putPion(Player &p, bool player)
 		p.sprite.setPosition(p.posX - p.sprite.getLocalBounds().height / 2, p.posY - p.sprite.getLocalBounds().width / 2);
 		_player2.push_back(p);
 	}
+}
+
+void					Graphic::drawMenu()
+{
+	_window.draw(*_sprite["background"]);
+	_window.draw(*_sprite["title"]);
+	_window.draw(*_sprite["jvsj"]);
 }

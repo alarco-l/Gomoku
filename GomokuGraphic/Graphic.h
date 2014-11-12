@@ -25,6 +25,7 @@ private:
 
 private:
 	void									draw();
+	void									drawMenu();
 	void									loadTexture();
 	void									putPion(Player &, bool);
 
