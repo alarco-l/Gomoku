@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <string>
 #include <map>
 #include <vector>
@@ -36,4 +38,6 @@ private:
 	std::map<std::string, sf::Texture*>		_texture;
 	std::vector<Player>						_player1;
 	std::vector<Player>						_player2;
+	sf::FloatRect							_jvsj;
+	sf::FloatRect							_jvsia;
 };

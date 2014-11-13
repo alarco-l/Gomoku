@@ -22,10 +22,10 @@ Graphic::~Graphic()
 {
 
 }
-#include <iostream>
+
 void					Graphic::run()
 {
-	bool				player = true;
+	bool				player = false;
 	Player				p;
 	bool				menu = true;
 
@@ -43,20 +43,25 @@ void					Graphic::run()
 				{
 					p.posX = sf::Mouse::getPosition(_window).x;
 					p.posY = sf::Mouse::getPosition(_window).y;
-					std::cout << p.posX << " " << p.posY << std::endl;
-					if ((p.posX >= 70 && p.posY >= 90) || (p.posX >= 960 && p.posY >= 90))
+					if ((p.posX >= 60 && p.posY >= 90) && (p.posX <= 966 && p.posY >= 90))
 					{
 						putPion(p, player);
 						player = !player;
-					};
+					}
 				}
 				else
 				{
-					
+					if (_jvsj.contains(_window.mapPixelToCoords(sf::Mouse::getPosition(_window))))
+					{
+						menu = false;
+					}
+					else if (_jvsia.contains(_window.mapPixelToCoords(sf::Mouse::getPosition(_window))))
+					{
+						menu = false;
+					}
 				}
 			}
 		}
-		std::cout << p.posX << " " << p.posY << std::endl;
 		_window.clear();
 		if (!menu)
 			draw();
@@ -97,21 +102,48 @@ void					Graphic::loadTexture()
 	if (!_texture["jvsj"]->loadFromFile("../Ressource/jvsj.png"))
 		throw std::runtime_error("Failed load texture");
 	_sprite["jvsj"]->setTexture(*_texture["jvsj"]);
-	_sprite["jvsj"]->setPosition(350, 180);
+	_sprite["jvsj"]->setPosition(350, 220);
+	_jvsj.height = _sprite["jvsj"]->getLocalBounds().height - 60;
+	_jvsj.width = _sprite["jvsj"]->getLocalBounds().width - 50;
+	_jvsj.left = 350 + 25;
+	_jvsj.top = 220 + 30;
+	if (!_texture["jvsia"]->loadFromFile("../Ressource/jvsia.png"))
+		throw std::runtime_error("Failed load texture");
+	_sprite["jvsia"]->setTexture(*_texture["jvsia"]);
+	_sprite["jvsia"]->setPosition(350, 220 + _sprite["jvsia"]->getLocalBounds().height + 80);
+	_jvsia.height = _sprite["jvsia"]->getLocalBounds().height - 60;
+	_jvsia.width = _sprite["jvsia"]->getLocalBounds().width - 50;
+	_jvsia.left = 350 + 25;
+	_jvsia.top = 220 + 30 + _sprite["jvsia"]->getLocalBounds().height + 80;
 }
 
 void					Graphic::putPion(Player &p, bool player)
 {
+	int					x;
+	int					x2;
+	int					y;
+	int					y2;
+
+	y = (p.posY - 95) % 35;
+	x = (p.posX - 64) % 50;
+	if (y <= (35 / 2))
+		y2 = p.posY - (y % 35);
+	else
+		y2 = p.posY - (y % 35) + 35;
+	if (x < (50 / 2))
+		x2 = p.posX - (x % 50);
+	else
+		x2 = p.posX - (x % 50) + 50;
 	if (player)
 	{
 		p.sprite = *_sprite["blanc"];
-		p.sprite.setPosition(p.posX - p.sprite.getLocalBounds().height / 2, p.posY - p.sprite.getLocalBounds().width / 2);
+		p.sprite.setPosition(x2 - _sprite["blanc"]->getLocalBounds().width / 2, y2 - _sprite["blanc"]->getLocalBounds().height / 2);
 		_player1.push_back(p);
 	}
 	else
 	{
 		p.sprite = *_sprite["noir"];
-		p.sprite.setPosition(p.posX - p.sprite.getLocalBounds().height / 2, p.posY - p.sprite.getLocalBounds().width / 2);
+		p.sprite.setPosition(x2 - _sprite["noir"]->getLocalBounds().width / 2, y2 - _sprite["noir"]->getLocalBounds().height / 2);
 		_player2.push_back(p);
 	}
 }
@@ -121,4 +153,5 @@ void					Graphic::drawMenu()
 	_window.draw(*_sprite["background"]);
 	_window.draw(*_sprite["title"]);
 	_window.draw(*_sprite["jvsj"]);
+	_window.draw(*_sprite["jvsia"]);
 }
