@@ -37,7 +37,7 @@ void					Graphic::run()
 		{
 			if (event.type == sf::Event::Closed)
 				_window.close();
-			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 			{
 				if (!menu)
 				{
@@ -45,8 +45,10 @@ void					Graphic::run()
 					p.posY = sf::Mouse::getPosition(_window).y;
 					if ((p.posX >= 60 && p.posY >= 90) && (p.posX <= 966 && p.posY >= 90))
 					{
-						putPion(p, player);
-						player = !player;
+						if (putPion(p, player) == true)
+							player = !player;
+						else
+							player = player;
 					}
 				}
 				else
@@ -117,7 +119,7 @@ void					Graphic::loadTexture()
 	_jvsia.top = 220 + 30 + _sprite["jvsia"]->getLocalBounds().height + 80;
 }
 
-void					Graphic::putPion(Player &p, bool player)
+bool					Graphic::putPion(Player &p, bool player)
 {
 	int					x;
 	int					x2;
@@ -134,17 +136,29 @@ void					Graphic::putPion(Player &p, bool player)
 		x2 = p.posX - (x % 50);
 	else
 		x2 = p.posX - (x % 50) + 50;
+	p.posX = x2;
+	p.posY = y2;
 	if (player)
 	{
 		p.sprite = *_sprite["blanc"];
 		p.sprite.setPosition(x2 - _sprite["blanc"]->getLocalBounds().width / 2, y2 - _sprite["blanc"]->getLocalBounds().height / 2);
-		_player1.push_back(p);
+		if (checkPosition(p) != false) {
+			_player1.push_back(p);
+			return (true);
+		}
+		else
+			return (false);
 	}
 	else
 	{
 		p.sprite = *_sprite["noir"];
 		p.sprite.setPosition(x2 - _sprite["noir"]->getLocalBounds().width / 2, y2 - _sprite["noir"]->getLocalBounds().height / 2);
-		_player2.push_back(p);
+		if (checkPosition(p) != false) {
+			_player2.push_back(p);
+			return (true);
+		}
+		else
+			return (false);
 	}
 }
 
@@ -154,4 +168,30 @@ void					Graphic::drawMenu()
 	_window.draw(*_sprite["title"]);
 	_window.draw(*_sprite["jvsj"]);
 	_window.draw(*_sprite["jvsia"]);
+}
+
+bool					Graphic::checkPosition(const Player &player) {
+	bool	x = false;
+	bool	y = false;
+
+	for (std::vector<Player>::iterator it = _player1.begin(); it != _player1.end(); ++it) {
+		if (it->posX == player.posX) {
+			x = true;
+			if (it->posY == player.posY)
+				y = true;
+			if (x == true && y == true)
+				return (false);
+		}
+	}
+	std::cout << "-----" << std::endl;
+	for (std::vector<Player>::iterator it = _player2.begin(); it != _player2.end(); ++it) {
+		if (it->posX == player.posX) {
+			x = true;
+			if (it->posY == player.posY)
+				y = true;
+			if (x == true && y == true)
+				return (false);
+		}
+	}
+	return (true);
 }

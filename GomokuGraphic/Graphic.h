@@ -29,7 +29,8 @@ private:
 	void									draw();
 	void									drawMenu();
 	void									loadTexture();
-	void									putPion(Player &, bool);
+	bool									putPion(Player &, bool);
+	bool									checkPosition(const Player &);
 
 private:
 
