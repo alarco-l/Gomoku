@@ -25,14 +25,12 @@ private:
 		int									posY;
 	};
 
-private:
 	void									draw();
 	void									drawMenu();
 	void									loadTexture();
 	bool									putPion(Player &, bool);
 	bool									checkPosition(const Player &);
-
-private:
+	void									averagePosition(Player &, int *, int *);
 
 	sf::RenderWindow						&_window;
 	std::map<std::string, sf::Sprite*>		_sprite;

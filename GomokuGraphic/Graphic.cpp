@@ -119,29 +119,34 @@ void					Graphic::loadTexture()
 	_jvsia.top = 220 + 30 + _sprite["jvsia"]->getLocalBounds().height + 80;
 }
 
-bool					Graphic::putPion(Player &p, bool player)
-{
+void					Graphic::averagePosition(Player &p, int *x2, int *y2) {
 	int					x;
-	int					x2;
 	int					y;
-	int					y2;
 
 	y = (p.posY - 95) % 35;
 	x = (p.posX - 64) % 50;
 	if (y <= (35 / 2))
-		y2 = p.posY - (y % 35);
+		*y2 = p.posY - (y % 35);
 	else
-		y2 = p.posY - (y % 35) + 35;
+		*y2 = p.posY - (y % 35) + 35;
 	if (x < (50 / 2))
-		x2 = p.posX - (x % 50);
+		*x2 = p.posX - (x % 50);
 	else
-		x2 = p.posX - (x % 50) + 50;
-	p.posX = x2;
-	p.posY = y2;
+		*x2 = p.posX - (x % 50) + 50;
+	p.posX = *x2;
+	p.posY = *y2;
+}
+
+bool					Graphic::putPion(Player &p, bool player)
+{
+	int					x;
+	int					y;
+
+	averagePosition(p, &x, &y);
 	if (player)
 	{
 		p.sprite = *_sprite["blanc"];
-		p.sprite.setPosition(x2 - _sprite["blanc"]->getLocalBounds().width / 2, y2 - _sprite["blanc"]->getLocalBounds().height / 2);
+		p.sprite.setPosition(x - _sprite["blanc"]->getLocalBounds().width / 2, y - _sprite["blanc"]->getLocalBounds().height / 2);
 		if (checkPosition(p) != false) {
 			_player1.push_back(p);
 			return (true);
@@ -152,7 +157,7 @@ bool					Graphic::putPion(Player &p, bool player)
 	else
 	{
 		p.sprite = *_sprite["noir"];
-		p.sprite.setPosition(x2 - _sprite["noir"]->getLocalBounds().width / 2, y2 - _sprite["noir"]->getLocalBounds().height / 2);
+		p.sprite.setPosition(x - _sprite["noir"]->getLocalBounds().width / 2, y - _sprite["noir"]->getLocalBounds().height / 2);
 		if (checkPosition(p) != false) {
 			_player2.push_back(p);
 			return (true);
@@ -183,7 +188,6 @@ bool					Graphic::checkPosition(const Player &player) {
 				return (false);
 		}
 	}
-	std::cout << "-----" << std::endl;
 	for (std::vector<Player>::iterator it = _player2.begin(); it != _player2.end(); ++it) {
 		if (it->posX == player.posX) {
 			x = true;
